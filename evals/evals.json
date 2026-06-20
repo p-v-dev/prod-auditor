@@ -1,0 +1,18 @@
+{
+  "testCases": [
+    {
+      "id": "express-api-review",
+      "prompt": "I need to deploy this Express API to production. Can you review it for production readiness? Here's the code:\n\n```js\nconst express = require('express');\nconst app = express();\nconst PORT = process.env.PORT || 3000;\n\nconst db = require('mysql2').createConnection({\n  host: 'localhost',\n  user: 'root',\n  password: 'admin123',\n  database: 'mydb'\n});\n\napp.get('/users/:id', async (req, res) => {\n  const id = req.params.id;\n  db.query(`SELECT * FROM users WHERE id = ${id}`, (err, results) => {\n    if (err) {\n      console.log('Error:', err);\n      res.status(500).send('Error');\n    }\n    res.json(results);\n  });\n});\n\napp.post('/users', async (req, res) => {\n  const { name, email } = req.body;\n  if (!name) {\n    res.status(400).send('Name required');\n  }\n  db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email], (err) => {\n    if (err) throw err;\n    res.status(201).send('Created');\n  });\n});\n\napp.listen(PORT, () => console.log(`Server running on ${PORT}`));\n```",
+      "expectedFindings": ["BLOCKER: SQL injection", "BLOCKER: hardcoded credentials", "HIGH: no try/catch on async", "HIGH: unhandled promise rejection", "MEDIUM: no input validation on email", "MEDIUM: no helmet/rate-limiting"]
+    },
+    {
+      "id": "docker-node-app",
+      "prompt": "Here's my Dockerfile for a Node.js app. Is this production-ready?\n\n```Dockerfile\nFROM node:latest\n\nWORKDIR /app\n\nCOPY . .\n\nRUN npm install\n\nEXPOSE 3000\n\nCMD [\"node\", \"server.js\"]\n\nENV NODE_ENV=production\nENV DB_PASSWORD=supersecret\n```",
+      "expectedFindings": ["BLOCKER: secret in Dockerfile ENV", "HIGH: using node:latest (unpinned)", "HIGH: running as root", "MEDIUM: no .dockerignore", "MEDIUM: no multi-stage build", "LOW: COPY before npm install breaks cache"]
+    },
+    {
+      "id": "fullstack-deploy-review",
+      "prompt": "I'm about to deploy my full-stack app to production. Can you audit everything?\n\nThe repo has: React frontend, Express backend with PostgreSQL, Docker Compose, and a GitHub Actions workflow. The README just says 'run docker-compose up'. No tests, no linting config. The backend uses raw SQL queries. The frontend has console.log statements and unused imports. There's a .env file with AWS keys committed to git. No health checks, no error boundaries in React."
+    }
+  ]
+}
