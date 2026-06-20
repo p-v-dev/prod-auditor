@@ -1,10 +1,10 @@
 # Production Readiness Auditor
 
-A skill for [opencode](https://opencode.ai) that audits codebases for production readiness with the rigor of a Staff Engineer, SRE, and Tech Lead.
+A skill that audits codebases for production readiness with the rigor of a Staff Engineer, SRE, and Tech Lead.
 
 ## About
 
-This skill lives in `~/.config/opencode/skills/production-readiness-auditor/`. The git repository here (`prod-auditor/`) contains the skill source, benchmark project, and test results.
+The git repository here (`prod-auditor/`) contains the skill source, benchmark project, and test results.
 
 ## Benchmark: Crude API
 
